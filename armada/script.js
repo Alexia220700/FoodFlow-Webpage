@@ -29,7 +29,7 @@ document.addEventListener('DOMContentLoaded', () => {
             id: "4",
             name: "Spinach",
             category: "produce",
-            expiryDate: "2025-05-15",
+            expiryDate: "2026-05-15",
             quantity: 1,
             unit: "bunch"
         },
@@ -37,7 +37,7 @@ document.addEventListener('DOMContentLoaded', () => {
             id: "5",
             name: "Yogurt",
             category: "dairy",
-            expiryDate: "2025-05-25",
+            expiryDate: "2025-08-25",
             quantity: 4,
             unit: "cups"
         },
@@ -45,7 +45,7 @@ document.addEventListener('DOMContentLoaded', () => {
             id: "6",
             name: "Bread",
             category: "grains",
-            expiryDate: "2025-05-17",
+            expiryDate: "2025-07-17",
             quantity: 1,
             unit: "loaf"
         }
