@@ -1,0 +1,367 @@
+body {
+    font-family: sans-serif;
+    margin: 0;
+    background-color: #f4f7f6; /* Light grayish background */
+    color: #333;
+    display: flex;
+    min-height: 100vh;
+}
+
+.app-layout {
+    display: flex;
+    width: 100%;
+}
+
+/* Sidebar Styles */
+.sidebar {
+    background-color: #26a69a; /* Teal-like sidebar background */
+    color: white;
+    width: 200px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.logo {
+    font-size: 1.8em;
+    font-weight: bold;
+    margin-bottom: 30px;
+}
+
+.sidebar-button, .add-item-button {
+    background: none;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    margin-bottom: 10px;
+    width: 100%;
+    text-align: left;
+    border-radius: 6px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: background-color 0.3s ease;
+}
+
+.sidebar-button.active {
+    background-color: #00897b; /* Darker teal for active */
+}
+
+.sidebar-button:hover, .add-item-button:hover {
+    background-color: #00897b;
+}
+
+.add-item-button {
+    background-color: #4db6ac; /* Slightly lighter teal for add button */
+    margin-top: auto;
+}
+
+/* Main Content Styles */
+.content {
+    flex-grow: 1;
+    padding: 20px;
+}
+
+header {
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+header h1 {
+    color: #2e7d32; /* Similar to 'fresh-green' */
+    font-size: 2.5em;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+header .subtitle {
+    color: #777; /* Similar to 'muted-foreground' */
+    font-size: 1em;
+}
+
+.controls {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.search-bar {
+    position: relative;
+    flex-grow: 1;
+}
+
+.search-bar i {
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #777;
+}
+
+.search-bar input[type="text"] {
+    width: 100%;
+    padding: 10px 10px 10px 35px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 1em;
+}
+
+.filter-button {
+    background-color: white;
+    color: #555;
+    border: 1px solid #ccc;
+    padding: 10px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 0.9em;
+    transition: background-color 0.3s ease;
+}
+
+.filter-button:hover {
+    background-color: #eee;
+}
+
+.category-filters {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+    overflow-x: auto;
+    padding-bottom: 10px;
+}
+
+.badge {
+    padding: 8px 12px;
+    border-radius: 20px;
+    border: 1px solid #ccc;
+    cursor: pointer;
+    font-size: 0.9em;
+    background-color: white;
+    color: #555;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.badge.active {
+    background-color: #e0f2f7; /* Light cyan-like */
+    color: #00acc1; /* Cyan-like */
+    border-color: #00acc1;
+}
+
+.badge:hover {
+    background-color: #f0f0f0;
+}
+
+.food-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.food-item-card {
+    background-color: #fff;
+    padding: 15px;
+    border-radius: 6px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    border: 1px solid #eee;
+}
+
+.food-item-card h3 {
+    font-weight: medium;
+    margin-top: 2px;
+    font-size: 1em;
+}
+
+.category-badge {
+    padding: 5px 8px;
+    border-radius: 10px;
+    font-size: 0.8em;
+    font-weight: bold;
+    border: 1px solid;
+}
+
+.category-badge.dairy {
+    background-color: #e3f2fd;
+    color: #1e88e5;
+    border-color: #bbdefb;
+}
+
+.category-badge.produce {
+    background-color: #e8f5e9;
+    color: #388e3c;
+    border-color: #c8e6c9;
+}
+
+.category-badge.meat {
+    background-color: #ffebee;
+    color: #e53935;
+    border-color: #ef9a9a;
+}
+
+.category-badge.grains {
+    background-color: #fffde7;
+    color: #fbc02d;
+    border-color: #fff9c4;
+}
+
+.category-badge.beverages {
+    background-color: #f3e5f5;
+    color: #8e24aa;
+    border-color: #e1bee7;
+}
+
+.category-badge.condiments {
+    background-color: #fce4ec;
+    color: #d81b60;
+    border-color: #f48fb1;
+}
+
+.food-item-card.quantity {
+    color: #777;
+    font-size: 0.9em;
+    margin-bottom: 5px;
+    margin-top: 10px;
+}
+
+.food-item-card.expiry {
+    font-size: 0.9em;
+}
+
+.expiry.fresh {
+    color: #2e7d32;
+}
+
+.expiry.soon {
+    color: #ffc107;
+}
+
+.expiry.expired {
+    color: #d32f2f;
+}
+
+.scan-section {
+    background-color: #f0f0f0; /* Similar to 'muted' */
+    padding: 20px;
+    border-radius: 6px;
+    text-align: center;
+}
+
+.scan-section h2 {
+    color: #2e7d32;
+    margin-bottom: 10px;
+}
+
+.scan-section p {
+    color: #777;
+    margin-bottom: 15px;
+}
+
+/* Modal Styles (Updated) */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    background-color: #fff;
+    padding: 25px;
+    border-radius: 8px;
+    width: 80%;
+    max-width: 450px; /* Slightly smaller max-width */
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15); /* Softer shadow */
+    position: relative;
+}
+
+.modal-content h2 {
+    color: #2e7d32;
+    margin-top: 0;
+    margin-bottom: 25px; /* More spacing below heading */
+    text-align: center;
+    font-size: 1.5em; /* Slightly smaller heading */
+    font-weight: 600; /* Semi-bold */
+}
+
+.form-group {
+    margin-bottom: 20px; /* More spacing between form groups */
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px; /* More spacing below label */
+    font-weight: 500; /* Slightly lighter bold */
+    color: #555;
+    font-size: 0.95em;
+}
+
+.form-group input[type="text"],
+.form-group input[type="number"],
+.form-group input[type="date"],
+.form-group select {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 6px; /* Slightly more rounded inputs */
+    font-size: 1em;
+    box-sizing: border-box;
+    color: #333;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+    outline: none;
+    border-color: #26a69a; /* Highlight color on focus */
+    box-shadow: 0 0 4px rgba(38, 166, 154, 0.3); /* Subtle focus shadow */
+}
+
+.form-actions {
+    display: flex;
+    gap: 15px; /* More spacing between buttons */
+    justify-content: flex-end;
+    margin-top: 30px; /* More spacing above buttons */
+}
+
+.save-button,
+.cancel-button {
+    padding: 12px 20px; /* Slightly larger buttons */
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 1em;
+    transition: background-color 0.2s ease;
+    font-weight: 500;
+}
+
+.save-button {
+    background-color: #2e7d32;
+    color: white;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.save-button:hover {
+    background-color: #1b5e20;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+}
+
+.cancel-button {
+    background-color: #f44336;
+    color: white;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.cancel-button:hover {
+    background-color: #d32f2f;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+}
