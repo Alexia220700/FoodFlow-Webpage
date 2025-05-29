@@ -1,11 +1,16 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // Food items array
+    // Create notification center container
+    const notificationCenter = document.createElement('div');
+    notificationCenter.className = 'notification-center';
+    document.body.appendChild(notificationCenter);
+
+    // Food items array with test items (modify dates for testing)
     let foodItems = [
         {
             id: "1",
             name: "Milk",
             category: "dairy",
-            expiryDate: "2025-05-20",
+            expiryDate: new Date(Date.now() + 86400000).toISOString().split('T')[0], // Tomorrow
             quantity: 1,
             unit: "gallon"
         },
@@ -13,7 +18,7 @@ document.addEventListener('DOMContentLoaded', () => {
             id: "2",
             name: "Apples",
             category: "produce",
-            expiryDate: "2026-05-18",
+            expiryDate: new Date(Date.now() - 86400000).toISOString().split('T')[0], // Yesterday
             quantity: 6,
             unit: "pieces"
         },
@@ -21,31 +26,15 @@ document.addEventListener('DOMContentLoaded', () => {
             id: "3",
             name: "Chicken Breast",
             category: "meat",
-            expiryDate: "2025-05-14",
+            expiryDate: "2025-06-20",
             quantity: 2,
             unit: "lbs"
         },
         {
             id: "4",
-            name: "Spinach",
-            category: "produce",
-            expiryDate: "2025-09-15",
-            quantity: 1,
-            unit: "bunch"
-        },
-        {
-            id: "5",
-            name: "Yogurt",
-            category: "dairy",
-            expiryDate: "2025-10-25",
-            quantity: 4,
-            unit: "cups"
-        },
-        {
-            id: "6",
             name: "Bread",
             category: "grains",
-            expiryDate: "2025-05-17",
+            expiryDate: "2025-06-03",
             quantity: 1,
             unit: "loaf"
         }
@@ -57,10 +46,19 @@ document.addEventListener('DOMContentLoaded', () => {
     const sidebarAddBtn = document.getElementById('sidebarAddBtn');
     const sortButton = document.querySelector('.filter-button');
     const searchInput = document.querySelector('.search-bar input');
+    const notificationsBtn = document.getElementById('notificationsBtn');
+    const notificationForm = document.getElementById('notificationForm');
+    const yesButton = document.querySelector('.notification-option.yes');
+    const noButton = document.querySelector('.notification-option.no');
+
+    // Notification state
+    let notificationEnabled = localStorage.getItem('notificationsEnabled') === 'true';
+    let notifiedItems = new Set();
 
     // Initialize
     let isSorted = false;
     renderFoodItems();
+    setupNotificationCheck();
 
     // Toggle form visibility
     sidebarAddBtn.addEventListener('click', () => {
@@ -84,32 +82,27 @@ document.addEventListener('DOMContentLoaded', () => {
         addForm.reset();
         addForm.classList.add('hidden');
         renderFoodItems();
+        checkExpiringItems(); // Check after adding new item
     });
 
     // Sort by expiry functionality
     sortButton.addEventListener('click', () => {
         if (!isSorted) {
-            // Sort by status (expired > soon > fresh) then by date
             foodItems.sort((a, b) => {
                 const statusA = getExpiryStatus(a.expiryDate);
                 const statusB = getExpiryStatus(b.expiryDate);
-                
-                // Status priority: expired > soon > fresh
                 const statusOrder = { expired: 0, soon: 1, fresh: 2 };
+                
                 if (statusOrder[statusA] !== statusOrder[statusB]) {
                     return statusOrder[statusA] - statusOrder[statusB];
                 }
-                
-                // If same status, sort by date
                 return new Date(a.expiryDate) - new Date(b.expiryDate);
             });
             sortButton.classList.add('active');
         } else {
-            // Return to original order
             foodItems.sort((a, b) => parseInt(a.id) - parseInt(b.id));
             sortButton.classList.remove('active');
         }
-        
         isSorted = !isSorted;
         renderFoodItems();
     });
@@ -118,6 +111,68 @@ document.addEventListener('DOMContentLoaded', () => {
     searchInput.addEventListener('input', () => {
         renderFoodItems();
     });
+
+    // Notification functions
+    function setupNotificationCheck() {
+        setInterval(checkExpiringItems, 5000); // Check every 5 seconds
+        checkExpiringItems(); // Initial check
+    }
+
+    function checkExpiringItems() {
+        if (!notificationEnabled) return;
+
+        const now = new Date();
+        const oneDayInMs = 24 * 60 * 60 * 1000;
+        
+        foodItems.forEach(item => {
+            const expiryDate = new Date(item.expiryDate);
+            const daysUntilExpiry = Math.ceil((expiryDate - now) / oneDayInMs);
+            const itemKey = `${item.id}-${daysUntilExpiry}`;
+            
+            if (daysUntilExpiry === 1 && !notifiedItems.has(itemKey)) {
+                showNotification(
+                    `${item.name} expires tomorrow!`,
+                    `Quantity: ${item.quantity} ${item.unit}`,
+                    "warning"
+                );
+                notifiedItems.add(itemKey);
+            } else if (daysUntilExpiry <= 0 && !notifiedItems.has(itemKey)) {
+                showNotification(
+                    `${item.name} has expired!`,
+                    "Please remove or consume it",
+                    "error"
+                );
+                notifiedItems.add(itemKey);
+            }
+        });
+    }
+
+    function showNotification(title, message, type = 'warning') {
+        const icons = {
+            warning: '🚨',
+            error: '❌',
+            success: '✅'
+        };
+        
+        const notification = document.createElement('div');
+        notification.className = `notification ${type}`;
+        notification.innerHTML = `
+            <strong>${icons[type]} ${title}</strong>
+            <span>${message}</span>
+            <span class="notification-close">&times;</span>
+        `;
+        
+        notification.querySelector('.notification-close').addEventListener('click', () => {
+            notification.remove();
+        });
+        
+        notificationCenter.appendChild(notification);
+        
+        setTimeout(() => {
+            notification.style.animation = 'fadeOut 0.3s ease-out';
+            notification.addEventListener('animationend', () => notification.remove());
+        }, 5000);
+    }
 
     // Helper functions
     function getExpiryStatus(date) {
@@ -150,7 +205,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function renderFoodItems() {
         const searchTerm = searchInput.value.toLowerCase();
-        
         foodGrid.innerHTML = '';
         
         const filteredItems = foodItems.filter(item => 
