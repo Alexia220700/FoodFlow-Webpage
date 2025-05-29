@@ -119,8 +119,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function checkExpiringItems() {
-        if (!notificationEnabled) return;
-
         const now = new Date();
         const oneDayInMs = 24 * 60 * 60 * 1000;
         
@@ -247,4 +245,3 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 });
-
